@@ -134,6 +134,7 @@ public class MainActivity extends AppCompatActivity {
         public Fragment getItem(int position) {
             // getItem is called to instantiate the fragment for the given page.
             // Return a PlaceholderFragment (defined as a static inner class below).
+            // 在ApkBundleLauncher 中会new出MainFragment对象（默认）
             Fragment fragment = Small.createObject("fragment-v4", sUris[position], MainActivity.this);
             if (fragment == null) {
                 fragment = PlaceholderFragment.newInstance(position + 1);

@@ -118,6 +118,7 @@ public class ApkBundleLauncher extends SoBundleLauncher {
 
     /**
      * Class for restore activity info from Stub to Real
+     * 根据stub找到真实的activity
      */
     private static class ActivityThreadHandlerCallback implements Handler.Callback {
 
@@ -136,7 +137,7 @@ public class ApkBundleLauncher extends SoBundleLauncher {
         @Override
         public boolean handleMessage(Message msg) {
             switch (msg.what) {
-                case LAUNCH_ACTIVITY:
+                case LAUNCH_ACTIVITY: // 启动Activity
                     redirectActivity(msg);
                     break;
 
@@ -310,6 +311,7 @@ public class ApkBundleLauncher extends SoBundleLauncher {
 
     /**
      * Class for redirect activity from Stub(AndroidManifest.xml) to Real(Plugin)
+     * 替换了系统的Instrumentation，把stub的Activity映射为真实插件的Activity
      */
     protected static class InstrumentationWrapper extends Instrumentation
             implements InstrumentationInternal {
@@ -578,7 +580,9 @@ public class ApkBundleLauncher extends SoBundleLauncher {
 
         private String[] mStubQueue;
 
-        /** Get an usable stub activity clazz from real activity */
+        /** Get an usable stub activity clazz from real activity
+         * 查找可用的stub activity
+         * */
         private String dequeueStubActivity(ActivityInfo ai, String realActivityClazz) {
             if (ai.launchMode == ActivityInfo.LAUNCH_MULTIPLE) {
                 // In standard mode, the stub activity is reusable.
@@ -648,6 +652,10 @@ public class ApkBundleLauncher extends SoBundleLauncher {
         }
     }
 
+    /**
+     * hook ActivityThread.mH.mCallback
+     * @param thread
+     */
     private static void ensureInjectMessageHandler(Object thread) {
         try {
             Field f = thread.getClass().getDeclaredField("mH");
@@ -740,7 +748,7 @@ public class ApkBundleLauncher extends SoBundleLauncher {
         // Get activity thread
         thread = ReflectAccelerator.getActivityThread(app);
 
-        // Replace instrumentation
+        // Replace instrumentation 替换 mInstrumentation  hook
         try {
             f = thread.getClass().getDeclaredField("mInstrumentation");
             f.setAccessible(true);
@@ -751,7 +759,7 @@ public class ApkBundleLauncher extends SoBundleLauncher {
             throw new RuntimeException("Failed to replace instrumentation for thread: " + thread);
         }
 
-        // Inject message handler
+        // Inject message handler hook ActivityThread.mH.mCallback
         ensureInjectMessageHandler(thread);
 
         // Get providers
@@ -918,7 +926,7 @@ public class ApkBundleLauncher extends SoBundleLauncher {
 
         return new File(bundle.getExtractPath(), entryName);
     }
-
+    // 加载bundle
     @Override
     public void loadBundle(Bundle bundle) {
         String packageName = bundle.getPackageName();
@@ -1040,7 +1048,7 @@ public class ApkBundleLauncher extends SoBundleLauncher {
             if (packageName == null) return null;
             String fname = bundle.getPath();
             if (fname == null || fname.equals("")) {
-                fname = packageName + ".MainFragment"; // default
+                fname = packageName + ".MainFragment"; // default // 默认名字
             } else {
                 char c = fname.charAt(0);
                 if (c == '.') {

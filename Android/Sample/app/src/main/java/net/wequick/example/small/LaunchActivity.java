@@ -29,6 +29,7 @@ public class LaunchActivity extends Activity {
         final SharedPreferences.Editor se = sp.edit();
         final long tStart = System.nanoTime();
         se.putLong("setUpStart", tStart);
+        // 去加载bundle.json文件
         Small.setUp(LaunchActivity.this, new net.wequick.small.Small.OnCompleteListener() {
             @Override
             public void onComplete() {
@@ -40,6 +41,7 @@ public class LaunchActivity extends Activity {
                     getWindow().getDecorView().postDelayed(new Runnable() {
                         @Override
                         public void run() {
+                            // 加载完 打开main
                             Small.openUri("main", LaunchActivity.this);
                             finish();
                         }

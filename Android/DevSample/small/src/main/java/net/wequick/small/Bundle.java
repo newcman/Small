@@ -224,6 +224,7 @@ public class Bundle {
 
     /**
      * Load bundles from manifest
+     * 从manifest加载bundles
      */
     protected static void loadLaunchableBundles(Small.OnCompleteListener listener) {
         Context context = Small.getContext();
@@ -486,6 +487,12 @@ public class Bundle {
         in.close();
     }
 
+    /**
+     * 把bundle.json中的bundle进行处理
+     * 1、把assert目录下的apk复制到data/data/包名/xx_small_base中
+     * @param map
+     * @throws JSONException
+     */
     private void initWithMap(JSONObject map) throws JSONException {
         if (sUserBundlesPath == null) { // Lazy init
             sUserBundlesPath = Small.getContext().getApplicationInfo().nativeLibraryDir;
@@ -494,13 +501,13 @@ public class Bundle {
 
         if (map.has("pkg")) {
             String pkg = map.getString("pkg");
-            if (pkg != null && !pkg.equals(HOST_PACKAGE)) {
+            if (pkg != null && !pkg.equals(HOST_PACKAGE)) { // 包名
                 mPackageName = pkg;
-                if (Small.isLoadFromAssets()) {
+                if (Small.isLoadFromAssets()) { // 从asset读取的bundle.json
                     mBuiltinAssetName = pkg + ".apk";
                     mBuiltinFile = new File(FileUtils.getInternalBundlePath(), mBuiltinAssetName);
                     mPatchFile = new File(FileUtils.getDownloadBundlePath(), mBuiltinAssetName);
-                    // Extract from assets to files
+                    // Extract from assets to files 把assets中的apk包拷贝到data/data/包名/xx_small_base中
                     try {
                         extractBundle(mBuiltinAssetName, mBuiltinFile);
                     } catch (IOException e) {

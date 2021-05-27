@@ -85,7 +85,7 @@ class AppPlugin extends BundlePlugin {
     protected void afterEvaluate(boolean released) {
         super.afterEvaluate(released)
 
-        // Initialize a resource package id for current bundle
+        // Initialize a resource package id for current bundle 初始化packageid
         initPackageId()
 
         // Get all dependencies with gradle script `compile project(':lib.*')'
@@ -1326,7 +1326,7 @@ class AppPlugin extends BundlePlugin {
                 def pkgId = sPackageIds[it.name]
                 libRefTable.put(pkgId, pkgName)
             }
-
+            // 用aapt处理资源id问题
             Aapt aapt = new Aapt(unzipApDir, rJavaFile, symbolFile, rev)
             if (small.retainedTypes != null && small.retainedTypes.size() > 0) {
                 aapt.filterResources(small.retainedTypes, filteredResources)
@@ -1643,7 +1643,7 @@ class AppPlugin extends BundlePlugin {
         Integer usingPP = sPackageIds.get(project.name)
         boolean addsNewPP = true
         // Get user defined package id
-        if (project.hasProperty('packageId')) {
+        if (project.hasProperty('packageId')) { // 配置了packageId
             def userPP = project.packageId
             if (userPP instanceof Integer) {
                 // Set in build.gradle with 'ext.packageId=0x7e' as an Integer
@@ -1664,7 +1664,7 @@ class AppPlugin extends BundlePlugin {
                 pp = usingPP
                 addsNewPP = false
             } else {
-                pp = genRandomPackageId(project.name)
+                pp = genRandomPackageId(project.name) // 随机生成
             }
         }
 
@@ -1688,6 +1688,7 @@ class AppPlugin extends BundlePlugin {
      * Generate a random package id in range [0x03, 0x7e] by bundle's name.
      * [0x00, 0x02] reserved for android system resources.
      * [0x03, 0x0f] reserved for the fucking crazy manufacturers.
+     * 从0x10到0x7e随机生成
      */
     private static int genRandomPackageId(String bundleName) {
         int minPP = 0x10

@@ -14,7 +14,7 @@
  * under the License.
  */
 package net.wequick.gradle
-
+// 插件类型
 public enum PluginType {
     Unknown (0),
     Host    (1),

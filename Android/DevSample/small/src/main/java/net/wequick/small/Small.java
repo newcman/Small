@@ -158,7 +158,7 @@ public final class Small {
         registerLauncher(new WebBundleLauncher());
         Bundle.onCreateLaunchers(context);
     }
-
+    // 去加载bundle.json文件 把assert下的apk拷贝到相应目录
     public static void setUp(Context context, OnCompleteListener listener) {
         if (sContext == null) {
             // Tips for CODE-BREAKING
@@ -341,6 +341,14 @@ public final class Small {
         ApkBundleLauncher.wrapIntent(intent);
     }
 
+    /**
+     * 创建fragment等
+     * @param type
+     * @param uriString
+     * @param context
+     * @param <T>
+     * @return
+     */
     public static <T> T createObject(String type, String uriString, Context context) {
         return createObject(type, makeUri(uriString), context);
     }
