@@ -23,6 +23,7 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.Message;
+import android.util.Log;
 
 import net.wequick.small.util.FileUtils;
 
@@ -69,6 +70,7 @@ import java.util.concurrent.TimeUnit;
 public class Bundle {
     //______________________________________________________________________________
     // Fields
+    private static final String TAG = "Bundle";
     private static final String BUNDLE_MANIFEST_NAME = "bundle.json";
     private static final String VERSION_KEY = "version";
     private static final String BUNDLES_KEY = "bundles";
@@ -251,10 +253,12 @@ public class Bundle {
     }
 
     private static void loadBundles(Context context) {
+        Log.d(TAG, "loadBundles");
         JSONObject manifestData;
         try {
             File patchManifestFile = getPatchManifestFile();
             String manifestJson = getCacheManifest();
+            Log.d(TAG, "patchManifestFile =" + patchManifestFile + ", manifestJson=" + manifestJson);
             if (manifestJson != null) {
                 // Load from cache and save as patch
                 if (!patchManifestFile.exists()) patchManifestFile.createNewFile();
@@ -283,6 +287,7 @@ public class Bundle {
                 builtinManifestStream.read(buffer);
                 builtinManifestStream.close();
                 manifestJson = new String(buffer, 0, builtinSize);
+                Log.d(TAG, "从 assets/bundle.json 获取json/n" + manifestJson);
             }
 
             // Parse manifest file
@@ -296,7 +301,7 @@ public class Bundle {
         if (manifest == null) return;
 
         setupLaunchers(context);
-
+        Log.d(TAG, "manifest =" + manifest.bundles);
         loadBundles(manifest.bundles);
     }
 

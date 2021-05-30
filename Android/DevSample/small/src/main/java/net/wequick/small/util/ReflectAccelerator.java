@@ -40,6 +40,7 @@ import java.lang.reflect.Array;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -468,7 +469,11 @@ public class ReflectAccelerator {
     }
 
     public static int[] addAssetPaths(AssetManager assets, String[] paths) {
-        Log.d(TAG, "addAssetPaths =" + paths);
+        if (paths != null) {
+            for (int i=0;i<paths.length;i++) {
+                Log.d(TAG, "addAssetPaths =" + paths[i]);
+            }
+        }
         if (Build.VERSION.SDK_INT < 28) {
             if (sAssetManager_addAssetPaths_method == null) {
                 sAssetManager_addAssetPaths_method = getMethod(AssetManager.class,

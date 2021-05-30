@@ -847,7 +847,7 @@ public class ApkBundleLauncher extends SoBundleLauncher {
         for (LoadedApk apk : apks) {
             dexPaths[i] = apk.path;
             dexFiles[i] = apk.dexFile;
-            if (Small.getBundleUpgraded(apk.packageName)) {
+            if (Small.getBundleUpgraded(apk.packageName)) {// 是否需要更新
                 // If upgraded, delete the opt dex file for recreating
                 if (apk.optDexFile.exists()) apk.optDexFile.delete();
                 Small.setBundleUpgraded(apk.packageName, false);
