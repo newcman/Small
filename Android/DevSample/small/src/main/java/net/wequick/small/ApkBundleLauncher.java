@@ -738,7 +738,7 @@ public class ApkBundleLauncher extends SoBundleLauncher {
     @Override
     public void onCreate(Application app) {
         super.onCreate(app);
-
+        Log.d(TAG, "onCreate");
         Object/*ActivityThread*/ thread;
         List<ProviderInfo> providers;
         Instrumentation base;
@@ -750,6 +750,7 @@ public class ApkBundleLauncher extends SoBundleLauncher {
 
         // Replace instrumentation 替换 mInstrumentation  hook
         try {
+            Log.d(TAG, "Replace instrumentation 替换 mInstrumentation  hook");
             f = thread.getClass().getDeclaredField("mInstrumentation");
             f.setAccessible(true);
             base = (Instrumentation) f.get(thread);
@@ -783,7 +784,7 @@ public class ApkBundleLauncher extends SoBundleLauncher {
     @Override
     public void setUp(Context context) {
         super.setUp(context);
-
+        Log.d(TAG, "setUp");
         Field f;
 
         // AOP for pending intent
@@ -815,7 +816,7 @@ public class ApkBundleLauncher extends SoBundleLauncher {
     @Override
     public void postSetUp() {
         super.postSetUp();
-
+        Log.d(TAG, "postSetUp");
         if (sLoadedApks == null) {
             Log.e(TAG, "Could not find any APK bundles!");
             return;

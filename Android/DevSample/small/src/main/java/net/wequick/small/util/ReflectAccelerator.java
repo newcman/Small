@@ -30,6 +30,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.util.ArrayMap;
+import android.util.Log;
 import android.view.ContextThemeWrapper;
 
 import java.io.File;
@@ -52,6 +53,7 @@ import dalvik.system.DexFile;
  * This class consists exclusively of static methods that accelerate reflections.
  */
 public class ReflectAccelerator {
+    private static String  TAG  = "ReflectAccelerator";
     // AssetManager.addAssetPath
     private static Method sAssetManager_addAssetPath_method;
     private static Method sAssetManager_addAssetPaths_method;
@@ -466,6 +468,7 @@ public class ReflectAccelerator {
     }
 
     public static int[] addAssetPaths(AssetManager assets, String[] paths) {
+        Log.d(TAG, "addAssetPaths =" + paths);
         if (Build.VERSION.SDK_INT < 28) {
             if (sAssetManager_addAssetPaths_method == null) {
                 sAssetManager_addAssetPaths_method = getMethod(AssetManager.class,
@@ -762,7 +765,13 @@ public class ReflectAccelerator {
             Field mResourcesImpl = Resources.class.getDeclaredField("mResourcesImpl");
             mResourcesImpl.setAccessible(true);
             Object resourceImpl = mResourcesImpl.get(resources);
-            Field implAssets = resourceImpl.getClass().getDeclaredField("mAssets");
+            Field implAssets;
+            try {
+                implAssets = resourceImpl.getClass().getDeclaredField("mAssets");
+            } catch (NoSuchFieldException e) {
+                // Compat for MiUI 8+
+                implAssets = resourceImpl.getClass().getSuperclass().getDeclaredField("mAssets");
+            }
             implAssets.setAccessible(true);
             implAssets.set(resourceImpl, newAssetManager);
         } catch (Throwable e) {
