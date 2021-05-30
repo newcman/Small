@@ -27,7 +27,7 @@ import java.io.File;
  *
  * <p>All the bundles can be upgraded after you download the patch file to
  * {@code bundle.getPatchFile()} and call {@code bundle.upgrade()}.
- *
+ * 处理热更新
  * There are two primary implements of this class:
  * <ul>
  *     <li>{@link ApkBundleLauncher} resolve the apk bundle</li>
@@ -90,8 +90,8 @@ public abstract class SoBundleLauncher extends BundleLauncher implements BundleE
         // Select the bundle entry-point, `built-in' or `patch'
         File plugin = bundle.getBuiltinFile();
         BundleParser parser = BundleParser.parsePackage(plugin, packageName);
-        File patch = bundle.getPatchFile();
-        BundleParser patchParser = BundleParser.parsePackage(patch, packageName);
+        File patch = bundle.getPatchFile(); // 修复包地址
+        BundleParser patchParser = BundleParser.parsePackage(patch, packageName); // 有更新就不为空
         if (parser == null) {
             if (patchParser == null) {
                 return false;
@@ -104,6 +104,7 @@ public abstract class SoBundleLauncher extends BundleLauncher implements BundleE
                 Log.d(TAG, "Patch file should be later than built-in!");
                 patch.delete();
             } else {
+                Log.d(TAG, "使用热更新包");
                 parser = patchParser; // use patch
                 plugin = patch;
             }

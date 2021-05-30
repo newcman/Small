@@ -847,9 +847,15 @@ public class ApkBundleLauncher extends SoBundleLauncher {
         for (LoadedApk apk : apks) {
             dexPaths[i] = apk.path;
             dexFiles[i] = apk.dexFile;
+            Log.d(TAG,  "apk.path =" + apk.path + "，apk.dexFile=" + apk.dexFile);
             if (Small.getBundleUpgraded(apk.packageName)) {// 是否需要更新
                 // If upgraded, delete the opt dex file for recreating
-                if (apk.optDexFile.exists()) apk.optDexFile.delete();
+                Log.d(TAG, apk.packageName + "需要更新");
+                if (apk.optDexFile.exists())
+                {
+                    Log.d(TAG,  "删除 optDexFile =" + apk.optDexFile);
+                    apk.optDexFile.delete();
+                }
                 Small.setBundleUpgraded(apk.packageName, false);
             }
             i++;

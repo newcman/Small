@@ -355,6 +355,12 @@ public class BundleParser {
         return false;
     }
 
+    /**
+     * 验证提取更新包
+     * @param bundle
+     * @param extractor
+     * @return
+     */
     public boolean verifyAndExtract(Bundle bundle, BundleExtractor extractor) {
         WeakReference<byte[]> readBufferRef;
         byte[] readBuffer = null;

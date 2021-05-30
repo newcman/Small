@@ -511,6 +511,7 @@ public class Bundle {
                 if (Small.isLoadFromAssets()) { // 从asset读取的bundle.json
                     mBuiltinAssetName = pkg + ".apk";
                     mBuiltinFile = new File(FileUtils.getInternalBundlePath(), mBuiltinAssetName);
+                    // 热更新包，下载下来的
                     mPatchFile = new File(FileUtils.getDownloadBundlePath(), mBuiltinAssetName);
                     // Extract from assets to files 把assets中的apk包拷贝到data/data/包名/xx_small_base中
                     try {
